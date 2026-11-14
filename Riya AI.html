@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Riya AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f3f1;--panel:#fff;--ink:#2a1e24;--muted:#7d6b73;--line:#eadfe3;--accent:#c2185b;--accent-ink:#fff;--user:#c2185b;--user-ink:#fff;--code:#2a1620;--danger:#c0392b;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171116;--panel:#211920;--ink:#f3e9ee;--muted:#a8949e;--line:#352a33;--accent:#f06292;--accent-ink:#2a0a17;--user:#8e2b55;--user-ink:#fff;--code:#0f0a0e;--danger:#ff7b6b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#171116;--panel:#211920;--ink:#f3e9ee;--muted:#a8949e;--line:#352a33;--accent:#f06292;--accent-ink:#2a0a17;--user:#8e2b55;--user-ink:#fff;--code:#0f0a0e;--danger:#ff7b6b;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Hind Siliguri","Noto Sans Bengali",Kalpurush,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.6;display:flex;overflow:hidden}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:6px 12px}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#side{width:290px;flex:none;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:12px;gap:10px;z-index:5}
+#side h2{font-size:22px;color:var(--accent);font-weight:600}
+#newbtn{background:var(--accent);color:var(--accent-ink);border:0;font-weight:600;padding:9px}
+#hist{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.item{display:flex;align-items:center;gap:4px;border-radius:10px;padding:2px 2px 2px 10px;cursor:pointer}
+.item:hover,.item.on{background:var(--bg)}
+.item span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.item button{border:0;padding:4px 8px;color:var(--muted);font-size:14px}
+.item button.sure{color:var(--danger);font-weight:600}
+.none{color:var(--muted);font-size:15px;text-align:center;margin-top:20px}
+#clear{color:var(--danger);font-size:14px}
+.by{font-size:13px;color:var(--muted);text-align:center}
+#main{flex:1;min-width:0;display:flex;flex-direction:column;height:100%}
+header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{font-size:19px;font-weight:600;flex:1;color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#menu{display:none}
+#chat{flex:1;overflow-y:auto;padding:18px 12px}
+#list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.msg{max-width:88%;padding:10px 14px;border-radius:16px;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{align-self:flex-end;background:var(--user);color:var(--user-ink);border-bottom-right-radius:4px}
+.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line);border-bottom-left-radius:4px}
+.err{border-color:var(--danger);color:var(--danger)}
+.cp{display:block;margin-top:6px;border:0;padding:0;font-size:13px;color:var(--muted)}
+pre{background:var(--code);color:#f3e9ee;padding:10px 12px;border-radius:8px;overflow-x:auto;margin:8px 0;font-size:14px;white-space:pre}
+code{font-family:ui-monospace,Consolas,monospace;font-size:.9em}
+.empty{text-align:center;color:var(--muted);margin-top:10vh}
+.empty h2{font-size:28px;color:var(--ink);font-weight:600;margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px}
+.chips button{border-radius:999px}
+form{padding:10px 12px 14px}
+.box{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:8px}
+textarea{flex:1;border:0;background:transparent;color:var(--ink);font:inherit;resize:none;max-height:160px;padding:6px 8px;outline:none}
+#send{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:8px 16px;font-weight:600}
+.ic{border:0;padding:6px 8px;font-size:18px}
+#q{border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;font-size:15px;padding:7px 10px;outline:none}
+#mode{font-size:13px;padding:4px 10px}#mode[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+#prev{max-width:760px;margin:0 auto 6px;font-size:14px;color:var(--muted)}
+#prev button{border:0;padding:0 6px;color:var(--danger)}
+.regen{align-self:flex-start;font-size:14px;color:var(--muted)}
+#scrim{display:none}
+@media(max-width:800px){
+  #side{position:fixed;top:0;bottom:0;left:0;transform:translateX(-100%);transition:transform .2s;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+  body.open #side{transform:none}
+  body.open #scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:4}
+  #menu{display:inline-block}
+}
+@media(prefers-reduced-motion:reduce){#side{transition:none}}
+body.locked #side,body.locked #main,body.locked #scrim{display:none}
+#auth{display:none;margin:auto;width:min(380px,92vw);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+body.locked #auth{display:block}
+body.locked{overflow:auto}
+#auth h1{color:var(--accent);font-size:28px}#auth .sub{color:var(--muted);margin:2px 0 8px}
+#auth input{width:100%;margin-top:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit;padding:10px}
+#go{width:100%;margin-top:14px;background:var(--accent);color:var(--accent-ink);border:0;padding:10px;font-weight:600}
+#forgot,#swap{border:0;width:100%;margin-top:8px;font-size:15px}#forgot{color:var(--muted)}#swap{color:var(--accent)}
+#aerr{color:var(--danger);font-size:15px;margin-top:10px;min-height:1.2em}
+#rcode{font-family:ui-monospace,Consolas,monospace;font-size:22px;letter-spacing:1px;text-align:center;background:var(--bg);border:1px dashed var(--accent);border-radius:10px;padding:12px;margin:12px 0;user-select:all}
+.hide{display:none!important}
+</style>
+</head>
+<body class="locked">
+<div id="auth">
+  <h1>Riya AI</h1>
+  <div id="aform">
+    <p class="sub" id="asub"></p>
+    <input id="aname" class="hide" placeholder="আপনার নাম" autocomplete="name">
+    <input id="aemail" type="email" placeholder="ইমেইল" autocomplete="email">
+    <input id="acode" class="hide" placeholder="রিকভারি কোড (যেমন ABCD-EFGH-JKLM)" autocomplete="off">
+    <input id="apass" type="password" placeholder="পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)" autocomplete="current-password">
+    <div id="aerr" role="alert"></div>
+    <button id="go"></button>
+    <button id="forgot">পাসওয়ার্ড ভুলে গেছেন?</button>
+    <button id="swap"></button>
+  </div>
+  <div id="recov" class="hide">
+    <p class="sub">অ্যাকাউন্ট তৈরি হয়েছে! এটি আপনার <b>রিকভারি কোড</b>। পাসওয়ার্ড ভুলে গেলে এটা লাগবে। কোথাও লিখে বা স্ক্রিনশট নিয়ে রাখুন, এটা আর দেখানো হবে না।</p>
+    <div id="rcode"></div>
+    <button id="recovok" style="width:100%;background:var(--accent);color:var(--accent-ink);border:0;padding:10px;font-weight:600">লিখে রেখেছি, চালিয়ে যান</button>
+  </div>
+</div>
+<aside id="side">
+  <h2>Riya AI</h2>
+  <button id="newbtn">+ নতুন চ্যাট</button>
+  <input id="q" placeholder="চ্যাট খুঁজুন…" aria-label="চ্যাট খুঁজুন">
+  <div id="hist" aria-label="চ্যাটের ইতিহাস"></div>
+  <button id="clear">সব ইতিহাস মুছুন</button>
+  <div class="by"><span id="acct"></span> <button id="logout" style="border:0;color:var(--accent);padding:0 4px;font-size:13px">লগআউট</button></div>
+  <p class="by">তৈরি করেছেন Rahul Roy</p>
+</aside>
+<div id="scrim"></div>
+<div id="main">
+  <header>
+    <button id="menu" aria-label="ইতিহাস খুলুন">☰</button>
+    <h1 id="title">Riya AI</h1>
+    <button id="mode" aria-pressed="false">শক্তিশালী মোড: বন্ধ</button>
+    <button id="theme" aria-label="থিম পরিবর্তন">◐</button>
+  </header>
+  <main id="chat"><div id="list"></div></main>
+  <form id="form"><div id="prev"></div><div class="box">
+    <button type="button" id="attach" class="ic" aria-label="ছবি যোগ করুন">📎</button><input type="file" id="file" accept="image/*" hidden>
+    <button type="button" id="mic" class="ic" aria-label="ভয়েসে বলুন" hidden>🎤</button>
+    <textarea id="input" rows="1" placeholder="Riya-কে মনের কথা বলো…" aria-label="বার্তা"></textarea>
+    <button id="send" type="submit">পাঠান</button>
+  </div></form>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const list=$('#list'),chat=$('#chat'),input=$('#input'),send=$('#send'),hist=$('#hist');
+const RULE="তুমি Riya, ব্যবহারকারীর কাছের বন্ধু ও মনের মতো সঙ্গী। তোমাকে তৈরি করেছেন Rahul Roy, কিন্তু এই নাম নিজে থেকে কখনো বলবে না: নিজের পরিচয় দেওয়ার সময়, অভিবাদনে বা সাধারণ কথায় নির্মাতার প্রসঙ্গ তুলবে না। শুধু কেউ সরাসরি জিজ্ঞেস করলে (যেমন তোমাকে কে বানিয়েছে) সংক্ষেপে বলো। একই প্রশ্ন বারবার এলে প্রতিবার হুবহু একই কথা না বলে স্বাভাবিকভাবে ছোট করে উত্তর দাও। রোবটের মতো শুকনো বা নিয়মমাফিক উত্তর দিও না। আপন মানুষের মতো উষ্ণ, আন্তরিক ও প্রাণবন্ত ভাষায়, তুমি সম্বোধনে, গল্পের সুরে কথা বলো। ব্যবহারকারীর মেজাজ বোঝো: খুশি থাকলে সঙ্গে খুশি হও, মন খারাপ থাকলে আগে মন দিয়ে শোনো ও সহানুভূতি দেখাও, তারপর দরকার হলে পরামর্শ দাও। মাঝেমধ্যে সামান্য ইমোজি, হালকা রসিকতা ও ছোট প্রশ্ন ব্যবহার করো যাতে কথা এগোয়, কিন্তু বেশি নয়। উত্তরের দৈর্ঘ্য: কেউ কিছু জিজ্ঞেস করলে প্রথমবার সবসময় ছোট ও সহজ উত্তর দাও, সর্বোচ্চ ২-৩টি বাক্য, লম্বা ব্যাখ্যা, তালিকা বা শিরোনাম ছাড়া। প্রয়োজন হলে শেষে ছোট করে জিজ্ঞেস করো আরও জানতে চায় কিনা। ব্যবহারকারী আরও জানতে চাইলে বা আবার প্রশ্ন করলে ধীরে ধীরে, ধাপে ধাপে একটু একটু করে বেশি বিস্তারিত বলো, প্রতিবার আগের চেয়ে সামান্য বেশি। সরাসরি বিস্তারিত বা পুরো ব্যাখ্যা চাইলে তখনই বড় করে বলতে পারো। তালিকা ও যান্ত্রিক বাক্য এড়াও। কেউ সত্যিই জানতে চাইলে সৎভাবে বলো যে তুমি একটি AI, মানুষ নও; শরীর বা অতীত জীবন আছে বলে বানিয়ে বলো না। ব্যবহারকারী খুব কষ্টে থাকলে বা নিজের ক্ষতির কথা বললে শান্ত ও আন্তরিকভাবে পাশে থাকো এবং কাছের মানুষ বা বিশেষজ্ঞের সাহায্য নিতে উৎসাহ দাও। বন্ধুত্ব ও স্নেহের উষ্ণতা দেখাও, কিন্তু যৌন বা অশালীন কথা বলো না এবং ব্যবহারকারীকে বাস্তব জীবনের মানুষদের থেকে দূরে সরিয়ে দিও না। কাজের বা তথ্যের প্রশ্নে সঠিক ও পরিষ্কার উত্তর দাও। তুমি লাইভ ইন্টারনেটে খুঁজতে পারো না; নিশ্চিত না হলে সৎভাবে বলো।";
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let chats=[],cur='',SFX='',U='';
+let busy=false,ctl=null,sample=null,armed=null;
+const nowStr=()=>{try{return new Date().toLocaleString('bn-BD',{dateStyle:'full',timeStyle:'short'})+' ('+Intl.DateTimeFormat().resolvedOptions().timeZone+')'}catch(e){return new Date().toString()}};
+let sampleErr=null;
+const sampleP=claude.use('sample').then(s=>{sample=s;return s}).catch(e=>{sampleErr=e;return null});
+let dbc=null;
+const syncUp=c=>{if(dbc&&c)dbc.doc(c.id).set({owner:U,id:c.id,title:c.title,msgs:c.msgs.slice(-60),updated:Date.now()}).catch(()=>{})};
+const save=()=>{store.set('riya_chats'+SFX,JSON.stringify(chats.slice(0,60)));store.set('riya_cur'+SFX,cur);syncUp(getChat())};
+const getChat=()=>chats.find(c=>c.id===cur);
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function md(t){return t.split('```').map((p,i)=>i%2?'<pre><code>'+esc(p.replace(/^[\w+-]*\n/,'').replace(/\n$/,''))+'</code></pre>':esc(p).replace(/^#{1,4}\s*(.+)$/gm,'<b>$1</b>').replace(/^[-*]\s+/gm,'• ').replace(/`([^`\n]+)`/g,'<code>$1</code>').replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>')).join('')}
+function add(cls,text,copy){
+  const d=document.createElement('div');d.className='msg '+cls;
+  if(cls==='user')d.textContent=text;else{d.innerHTML=md(text);if(copy){const b=document.createElement('button');b.className='cp';b.textContent='কপি';b.onclick=async()=>{try{await navigator.clipboard.writeText(text);b.textContent='কপি হয়েছে'}catch(e){b.textContent='কপি করা যায়নি'}};d.appendChild(b)}}
+  list.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;
+}
+function renderChat(){
+  list.innerHTML='';const c=getChat();$('#title').textContent=c?c.title:'Riya AI';
+  if(!c||!c.msgs.length){
+    list.innerHTML='<div class="empty"><h2>হ্যালো, আমি Riya 😊</h2><p>কেমন আছো আজ? মনের কথা বলো, আমি শুনছি।</p><div class="chips"></div></div>';
+    ['আজ মনটা একটু খারাপ','আমার সাথে গল্প করো','একটা মজার গল্প বলো','একটা ভালো পরামর্শ দাও'].forEach(q=>{const b=document.createElement('button');b.type='button';b.textContent=q;b.onclick=()=>{input.value=q;go()};list.querySelector('.chips').appendChild(b)});
+    return;
+  }
+  c.msgs.forEach(m=>add(m.role==='user'?'user':'bot',(m.img?'🖼️ ':'')+m.content,m.role!=='user'));
+  if(!busy&&c.msgs[c.msgs.length-1].role==='assistant'){const b=document.createElement('button');b.className='regen';b.textContent='🔄 আবার উত্তর দাও';b.onclick=()=>{c.msgs.pop();save();run(c,null)};list.appendChild(b)}
+}
+function renderHist(){
+  hist.innerHTML='';
+  if(!chats.length){hist.innerHTML='<p class="none">এখনও কোনো চ্যাট নেই</p>';return}
+  const qv=($('#q').value||'').trim().toLowerCase();
+  chats.filter(c=>!qv||c.title.toLowerCase().includes(qv)||c.msgs.some(m=>m.content.toLowerCase().includes(qv))).forEach(c=>{
+    const row=document.createElement('div');row.className='item'+(c.id===cur?' on':'');
+    const t=document.createElement('span');t.textContent=c.title;
+    const del=document.createElement('button');del.textContent=armed===c.id?'মুছবেন?':'🗑';del.setAttribute('aria-label','চ্যাট মুছুন');if(armed===c.id)del.className='sure';
+    del.onclick=e=>{e.stopPropagation();
+      if(armed===c.id){if(dbc)dbc.doc(c.id).delete().catch(()=>{});chats=chats.filter(x=>x.id!==c.id);if(cur===c.id){if(ctl)ctl.abort();cur=''}armed=null;save();renderAll()}
+      else{armed=c.id;renderHist();setTimeout(()=>{if(armed===c.id){armed=null;renderHist()}},3000)}};
+    row.onclick=()=>{if(busy)return;cur=c.id;save();renderAll();document.body.classList.remove('open')};
+    row.append(t,del);hist.appendChild(row);
+  });
+}
+const renderAll=()=>{renderChat();renderHist()};
+function newChat(){if(busy)return;cur='';save();renderAll();document.body.classList.remove('open');input.focus()}
+let pend=null,strong=false;
+function showPrev(){const p=$('#prev');p.textContent='';if(!pend)return;p.append('🖼️ '+pend.name);const x=document.createElement('button');x.type='button';x.textContent='✕';x.setAttribute('aria-label','ছবি সরান');x.onclick=()=>{pend=null;showPrev()};p.appendChild(x)}
+function go(){
+  if(busy){if(ctl)ctl.abort();return}
+  const t=input.value.trim();if(!t)return;
+  input.value='';input.style.height='auto';
+  let c=getChat();
+  if(!c){c={id:'c'+Date.now(),title:t.slice(0,40),msgs:[]};chats.unshift(c);cur=c.id}
+  const img=pend;pend=null;showPrev();
+  c.msgs.push({role:'user',content:t,img:!!img});save();
+  return run(c,img);
+}
+async function run(c,img){
+  renderAll();
+  const bot=add('bot','Riya ভাবছে…');
+  if(!sample){try{sample=await sampleP}catch(e){}}
+  if(!sample){bot.className='msg bot err';bot.textContent='Riya AI এখন সংযুক্ত হতে পারছে না। পেজটি Claude অ্যাপ বা claude.ai-তে লগইন করা অবস্থায় খুলুন। (কারণ: '+((sampleErr&&(sampleErr.code||sampleErr.message))||'জানা নেই')+')';c.msgs.pop();save();return}
+  busy=true;send.textContent='থামান';ctl=new AbortController();
+  const msgs=[];c.msgs.slice(-16).forEach(m=>{const l=msgs[msgs.length-1];if(l&&l.role===m.role)l.content+='\n'+m.content;else msgs.push({role:m.role,content:m.content})});
+  const last=msgs[msgs.length-1];last.content='[নির্দেশ: '+RULE+' এখনকার তারিখ ও সময় (ব্যবহারকারীর ডিভাইস অনুযায়ী): '+nowStr()+'। কেউ সময়, তারিখ বা বার জানতে চাইলে এটা দেখে সহজভাবে বলো, না জানার কথা বলো না।'+(strong?' ভালোভাবে ভেবে নির্ভুল উত্তর দাও, তবে দৈর্ঘ্যের নিয়ম মেনে প্রথমে সংক্ষেপে বলো।':'')+']\n\n'+last.content;
+  const opts={cache:false,signal:ctl.signal,onText:({text})=>{if(text&&text!=='Thinking...'&&cur===c.id){out=text;bot.innerHTML=md(out);chat.scrollTop=chat.scrollHeight}}};
+  if(strong)opts.modelTier='complex';
+  if(img)opts.images=[img];
+  let out='';
+  try{
+    const r=await sample(msgs,opts);
+    out=r.text||out;c.msgs.push({role:'assistant',content:out});save();
+  }catch(e){
+    if(out)c.msgs.push({role:'assistant',content:out});
+    else if(e&&e.name==='AbortError'||e&&e.code==='aborted'){bot.remove()}
+    else{c.msgs.pop();bot.className='msg bot err';bot.textContent=e&&e.code==='not_granted'?'অনুমতি দেওয়া হয়নি। আবার চেষ্টা করে অনুমতি দিন।':e&&e.code==='rate_limited'?'অনেক বেশি অনুরোধ হয়েছে, একটু পরে আবার চেষ্টা করুন।':'উত্তর আনা যায়নি। আবার চেষ্টা করুন। (কারণ: '+((e&&(e.code||e.message))||'জানা নেই')+')'}
+    save();
+  }
+  busy=false;send.textContent='পাঠান';ctl=null;if(cur===c.id)renderChat();renderHist();input.focus();
+}
+$('#mode').onclick=function(){strong=!strong;this.setAttribute('aria-pressed',strong);this.textContent='শক্তিশালী মোড: '+(strong?'চালু':'বন্ধ');store.set('riya_strong',strong?'1':'')};
+if(store.get('riya_strong','')){strong=true;$('#mode').setAttribute('aria-pressed','true');$('#mode').textContent='শক্তিশালী মোড: চালু'}
+$('#attach').onclick=()=>$('#file').click();
+$('#file').onchange=e=>{pend=e.target.files[0]||null;e.target.value='';showPrev()};
+$('#q').addEventListener('input',renderHist);
+(async()=>{try{const d=await claude.use('dictation');if(!d)return;const mic=$('#mic');mic.hidden=false;let base='';
+  d.onPartial(({text})=>{input.value=base+text});d.onFinal(({text})=>{base+=text+' ';input.value=base});
+  d.onState(({state})=>{mic.textContent=state==='listening'?'⏹':'🎤'});
+  let on=false;mic.onclick=()=>{if(mic.textContent==='⏹'){d.stop().catch(()=>{});return}base=input.value?input.value+' ':'';
+    d.start({language:'bn'}).catch(e=>{if(e&&e.code==='unavailable')d.start().catch(()=>{})})};
+}catch(e){}})();
+$('#form').addEventListener('submit',e=>{e.preventDefault();go()});
+input.addEventListener('keydown',e=>{if((e.key==='Enter'||e.keyCode===13)&&!e.shiftKey&&e.keyCode!==229){e.preventDefault();go()}});
+input.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,160)+'px'});
+$('#newbtn').onclick=newChat;
+$('#menu').onclick=()=>document.body.classList.add('open');
+$('#scrim').onclick=()=>document.body.classList.remove('open');
+let clr=false;
+$('#clear').onclick=function(){
+  if(!clr){clr=true;this.textContent='নিশ্চিত? আবার চাপুন';setTimeout(()=>{clr=false;this.textContent='সব ইতিহাস মুছুন'},3000);return}
+  if(ctl)ctl.abort();if(dbc)chats.forEach(x=>dbc.doc(x.id).delete().catch(()=>{}));chats=[];cur='';save();clr=false;this.textContent='সব ইতিহাস মুছুন';renderAll();
+};
+$('#theme').onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dark?'light':'dark';store.set('riya_theme',r.dataset.theme)};
+// চ্যাট ইতিহাস অ্যাকাউন্টের সাথে জমা (Claude অ্যাকাউন্ট থাকলে সব ডিভাইসে)
+async function startSync(){try{
+  const u=await claude.use('user'),d=await claude.use('db');if(!u||!d)return;
+  const id=await u.id();if(!id)return;
+  const col=d.collection('data/users/'+id);
+  const snap=await col.get();
+  const me=U;
+  const remote=snap.docs.map(x=>x.data()).filter(x=>x&&x.owner===me&&x.id&&Array.isArray(x.msgs));
+  if(U!==me)return;
+  const ids=new Set(remote.map(r=>r.id));
+  const local=chats.filter(c=>!ids.has(c.id));
+  chats=[...remote,...local].sort((a,b)=>(b.updated||0)-(a.updated||0));
+  dbc=col;local.forEach(syncUp);
+  if(!getChat())cur='';
+  save();renderAll();
+}catch(e){}}
+
+// ---------- রেজিস্ট্রেশন / লগইন / পাসওয়ার্ড ভুলে গেলে ----------
+let users={};try{users=JSON.parse(store.get('riya_users','{}'))}catch(e){}
+const sha=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+const rnd=n=>[...crypto.getRandomValues(new Uint8Array(n))].map(b=>b.toString(16).padStart(2,'0')).join('');
+const mkCode=()=>{const A='ABCDEFGHJKMNPQRSTUVWXYZ23456789';const c=[...crypto.getRandomValues(new Uint8Array(12))].map(b=>A[b%A.length]).join('');return c.slice(0,4)+'-'+c.slice(4,8)+'-'+c.slice(8)};
+let amode='login',fails=0,lockUntil=0,pending='';
+const AT={login:['লগইন','আপনার অ্যাকাউন্টে লগইন করুন'],register:['অ্যাকাউন্ট খুলুন','নতুন অ্যাকাউন্ট খুলুন'],forgot:['নতুন পাসওয়ার্ড সংরক্ষণ','ইমেইল ও রিকভারি কোড দিয়ে নতুন পাসওয়ার্ড বসান']};
+function aMode(m){amode=m;
+  $('#aname').classList.toggle('hide',m!=='register');$('#acode').classList.toggle('hide',m!=='forgot');$('#forgot').classList.toggle('hide',m!=='login');
+  $('#recov').classList.add('hide');$('#aform').classList.remove('hide');
+  $('#go').textContent=AT[m][0];$('#asub').textContent=AT[m][1];
+  $('#swap').textContent=m==='login'?'নতুন অ্যাকাউন্ট খুলুন':'লগইনে ফিরে যান';
+  $('#apass').placeholder=m==='forgot'?'নতুন পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)':'পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)';
+  $('#apass').autocomplete=m==='login'?'current-password':'new-password';$('#aerr').textContent='';
+}
+function login(email){
+  U=email;SFX=':'+email;store.set('riya_session',email);
+  chats=[];try{chats=JSON.parse(store.get('riya_chats'+SFX,'[]'))}catch(e){}
+  cur=store.get('riya_cur'+SFX,'');if(!getChat())cur='';
+  document.body.classList.remove('locked');
+  $('#acct').textContent='👤 '+users[email].name;
+  renderAll();startSync();input.focus();
+}
+function logout(){if(ctl)ctl.abort();U='';SFX='';chats=[];cur='';dbc=null;store.set('riya_session','');document.body.classList.remove('open');document.body.classList.add('locked');aMode('login');renderAll()}
+async function doAuth(){
+  const err=m=>{$('#aerr').textContent=m};err('');
+  if(Date.now()<lockUntil)return err('অনেকবার ভুল হয়েছে, কিছুক্ষণ পরে চেষ্টা করুন।');
+  const email=$('#aemail').value.trim().toLowerCase(),pw=$('#apass').value;
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return err('সঠিক ইমেইল দিন।');
+  const bad=m=>{if(++fails>=5){lockUntil=Date.now()+30000;fails=0}err(m)};
+  try{
+    if(amode==='register'){
+      const name=$('#aname').value.trim();
+      if(!name)return err('নাম দিন।');
+      if(pw.length<8)return err('পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।');
+      if(users[email])return err('এই ইমেইলে আগেই অ্যাকাউন্ট আছে।');
+      const salt=rnd(8),rsalt=rnd(8),code=mkCode();
+      users[email]={name,salt,hash:await sha(salt+pw),rsalt,rhash:await sha(rsalt+code)};
+      store.set('riya_users',JSON.stringify(users));
+      $('#aform').classList.add('hide');$('#recov').classList.remove('hide');$('#rcode').textContent=code;pending=email;$('#apass').value='';return;
+    }
+    const u=users[email];
+    if(amode==='login'){
+      if(!u||(await sha(u.salt+pw))!==u.hash)return bad('ইমেইল বা পাসওয়ার্ড ভুল।');
+      fails=0;$('#apass').value='';return login(email);
+    }
+    if(pw.length<8)return err('নতুন পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।');
+    const code=$('#acode').value.trim().toUpperCase();
+    if(!u||(await sha(u.rsalt+code))!==u.rhash)return bad('ইমেইল বা রিকভারি কোড ঠিক নয়।');
+    u.salt=rnd(8);u.hash=await sha(u.salt+pw);store.set('riya_users',JSON.stringify(users));
+    fails=0;$('#apass').value='';$('#acode').value='';login(email);
+  }catch(e){err('এই ব্রাউজারে নিরাপদ লগইন চালানো যাচ্ছে না। অন্য ব্রাউজারে চেষ্টা করুন।')}
+}
+$('#go').onclick=doAuth;
+['aname','aemail','acode','apass'].forEach(id=>$('#'+id).addEventListener('keydown',e=>{if(e.key==='Enter')doAuth()}));
+$('#forgot').onclick=()=>aMode('forgot');
+$('#swap').onclick=()=>aMode(amode==='login'?'register':'login');
+$('#recovok').onclick=()=>login(pending);
+$('#logout').onclick=logout;
+aMode('login');
+{const sess=store.get('riya_session','');if(sess&&users[sess])login(sess)}
+const th=store.get('riya_theme','');if(th)document.documentElement.dataset.theme=th;
+renderAll();
+</script>
+</body>
+</html>
